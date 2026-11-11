@@ -234,15 +234,18 @@
         <div class="view-mode-selector" role="group" aria-label="Cambiar vista del menú">
           <button type="button" class="view-mode-btn active" data-view-mode="cards">
             <span>🍽️</span>
-            <span>Tarjetas Visuales</span>
+            <span class="btn-text-desktop">Tarjetas Visuales</span>
+            <span class="btn-text-mobile">Tarjetas</span>
           </button>
           <button type="button" class="view-mode-btn" data-view-mode="carta">
             <span>📜</span>
-            <span>Carta Oficial</span>
+            <span class="btn-text-desktop">Carta Oficial</span>
+            <span class="btn-text-mobile">Carta</span>
           </button>
           <button type="button" class="view-mode-btn" data-view-mode="galeria">
             <span>🖼️</span>
-            <span>Fotos & Volantes</span>
+            <span class="btn-text-desktop">Fotos & Volantes</span>
+            <span class="btn-text-mobile">Fotos</span>
           </button>
         </div>
       </div>
@@ -498,21 +501,35 @@
         <span class="section-label">📍 Visítanos</span>
         <h2 class="section-title">Nuestra Ubicación</h2>
         <p class="section-desc">
-          Estamos ubicados en la <strong>Cra. 5 #134, Ibagué, Tolima</strong>. ¡Ven a disfrutar del auténtico sabor al carbón o pide tu domicilio!
+          Encuéntranos en la <strong>Cra. 5 #134, Barrio El Salado, Ibagué, Tolima</strong>. ¡Ven a disfrutar en nuestro punto físico o pide a domicilio calientico!
         </p>
       </header>
 
       <div class="location-grid">
         <!-- Mapa Interactivo Google Maps -->
-        <div class="map-frame-wrapper">
-          <iframe 
-            class="google-map-iframe"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d996.5!2d-75.152604!3d4.445838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMjYnNDUuMCJOIDc1wrAwOScwOS40Ilc!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco"
-            allowfullscreen="" 
-            loading="lazy" 
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicación de Asados Colombianos en Google Maps">
-          </iframe>
+        <div class="map-column">
+          <div class="map-frame-wrapper">
+            <iframe 
+              class="google-map-iframe"
+              src="https://maps.google.com/maps?q=4.4458375,-75.1526038&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Ubicación de Asados Colombianos en Google Maps">
+            </iframe>
+          </div>
+
+          <!-- Foto de la Fachada Real del Restaurante -->
+          <div class="facade-preview-card">
+            <div class="facade-img-wrap">
+              <img src="assets/images/fachada-asadero.png" alt="Fachada de Asados Colombianos en Cra. 5, Ibagué" class="facade-img" loading="lazy">
+              <span class="facade-badge">Fachada Oficial</span>
+            </div>
+            <div class="facade-caption">
+              <strong>Local Físico Asados Colombianos</strong>
+              <span>Cra. 5 #134, Ibagué (Frente a la vía principal)</span>
+            </div>
+          </div>
         </div>
 
         <!-- Tarjeta de Información de Ubicación -->
