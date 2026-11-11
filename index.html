@@ -438,12 +438,18 @@
       <!-- Lado Izquierdo: Volante Original 100% Sin Recortes -->
       <div class="lightbox-media-side">
         <img id="lightboxImage" src="" alt="" class="lightbox-img">
+        <a id="lightboxFullImageBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn-lightbox-zoom-full">
+          <span>🔍 Abrir Imagen Completa en Alta Resolución</span>
+        </a>
       </div>
 
       <!-- Lado Derecho: Detalles y Opciones de Pedido -->
       <div class="lightbox-info-side">
         <div class="lightbox-header">
-          <span class="lightbox-category-chip" id="lightboxCategory">Especialidad</span>
+          <div class="lightbox-badges-row">
+            <span class="lightbox-category-chip" id="lightboxCategory">Especialidad</span>
+            <span class="lightbox-badge" id="lightboxBadge">Oficial</span>
+          </div>
           <h3 class="lightbox-title" id="lightboxTitle">Nombre del Plato</h3>
         </div>
 
@@ -530,8 +536,8 @@
             </iframe>
           </div>
 
-          <!-- Foto de la Fachada Real del Restaurante -->
-          <div class="facade-preview-card">
+          <!-- Foto de la Fachada Real del Restaurante (Interactiva) -->
+          <div class="facade-preview-card" id="facadePreviewCard" role="button" tabindex="0" title="Toca para ver la foto de la fachada completa">
             <div class="facade-img-wrap">
               <img src="assets/images/fachada-asadero.png" alt="Fachada de Asados Colombianos en Cra. 5, Ibagué" class="facade-img" loading="lazy">
               <span class="facade-badge">Fachada Oficial</span>
@@ -539,6 +545,7 @@
             <div class="facade-caption">
               <strong>Local Físico Asados Colombianos</strong>
               <span>Cra. 5 #134, Ibagué (Frente a la vía principal)</span>
+              <span class="facade-tap-action">🔍 Toca para ampliar fachada</span>
             </div>
           </div>
         </div>

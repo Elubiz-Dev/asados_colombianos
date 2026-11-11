@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lightboxBackdrop: document.getElementById("lightboxBackdrop"),
     closeLightboxBtn: document.getElementById("closeLightboxBtn"),
     lightboxImage: document.getElementById("lightboxImage"),
+    lightboxFullImageBtn: document.getElementById("lightboxFullImageBtn"),
     lightboxTitle: document.getElementById("lightboxTitle"),
     lightboxCategory: document.getElementById("lightboxCategory"),
     lightboxBadge: document.getElementById("lightboxBadge"),
@@ -55,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     lightboxAddToCartBtn: document.getElementById("lightboxAddToCartBtn"),
     lightboxDirectWaBtn: document.getElementById("lightboxDirectWaBtn"),
 
-    // Video
+    // Fachada y Video
+    facadePreviewCard: document.getElementById("facadePreviewCard"),
     heroVideo: document.getElementById("heroVideo"),
     videoSoundToggle: document.getElementById("videoSoundToggle"),
     videoPlayToggle: document.getElementById("videoPlayToggle")
@@ -625,14 +627,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!item) return;
 
     state.selectedItemForModal = item;
-    const flyerSrc = item.fullFlyer || item.cardImage;
+    const flyerSrc = item.fullFlyer || item.cardImage || "assets/images/menu-oficial-completo.jpg";
 
-    elements.lightboxImage.src = flyerSrc;
-    elements.lightboxImage.alt = item.name;
-    elements.lightboxTitle.textContent = item.name;
-    elements.lightboxCategory.textContent = CATEGORIES.find(c => c.id === item.category)?.name || "Especialidad";
-    elements.lightboxBadge.textContent = item.badge || "Recomendado";
-    elements.lightboxDesc.textContent = item.description;
+    if (elements.lightboxImage) {
+      elements.lightboxImage.src = flyerSrc;
+      elements.lightboxImage.alt = item.name;
+    }
+    if (elements.lightboxFullImageBtn) {
+      elements.lightboxFullImageBtn.href = flyerSrc;
+    }
+    if (elements.lightboxTitle) elements.lightboxTitle.textContent = item.name;
+    if (elements.lightboxCategory) elements.lightboxCategory.textContent = CATEGORIES.find(c => c.id === item.category)?.name || "Especialidad";
+    if (elements.lightboxBadge) elements.lightboxBadge.textContent = item.badge || "Recomendado";
+    if (elements.lightboxDesc) elements.lightboxDesc.textContent = item.description || "";
 
     // Acompañamientos
     if (elements.lightboxAccompaniments) {
@@ -650,87 +657,105 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Porciones
-    if (item.hasPortions) {
-      elements.lightboxPortionsContainer.style.display = "block";
-      elements.lightboxPortionsSelect.innerHTML = item.portions.map((p, idx) => `
-        <option value="${idx}">${p.name} - ${formatCOP(p.price)}</option>
-      `).join('');
+    if (item.hasPortions && item.portions && item.portions.length > 0) {
+      if (elements.lightboxPortionsContainer) elements.lightboxPortionsContainer.style.display = "block";
+      if (elements.lightboxPortionsSelect) {
+        elements.lightboxPortionsSelect.innerHTML = item.portions.map((p, idx) => `
+          <option value="${idx}">${p.name} - ${formatCOP(p.price)}</option>
+        `).join('');
 
-      elements.lightboxPrice.textContent = formatCOP(item.portions[0].price);
-
-      elements.lightboxPortionsSelect.onchange = (e) => {
-        const pIdx = parseInt(e.target.value, 10);
-        elements.lightboxPrice.textContent = formatCOP(item.portions[pIdx].price);
-      };
+        elements.lightboxPortionsSelect.onchange = (e) => {
+          const pIdx = parseInt(e.target.value, 10);
+          if (elements.lightboxPrice) elements.lightboxPrice.textContent = formatCOP(item.portions[pIdx].price);
+        };
+      }
+      if (elements.lightboxPrice) elements.lightboxPrice.textContent = formatCOP(item.portions[0].price);
     } else {
-      elements.lightboxPortionsContainer.style.display = "none";
-      elements.lightboxPrice.textContent = formatCOP(item.defaultPrice);
+      if (elements.lightboxPortionsContainer) elements.lightboxPortionsContainer.style.display = "none";
+      if (elements.lightboxPrice) elements.lightboxPrice.textContent = formatCOP(item.defaultPrice);
     }
 
     // Botón Agregar al Carrito desde Modal
-    elements.lightboxAddToCartBtn.onclick = () => {
-      let portionName = null;
-      let price = item.defaultPrice;
+    if (elements.lightboxAddToCartBtn) {
+      elements.lightboxAddToCartBtn.style.display = "";
+      elements.lightboxAddToCartBtn.onclick = () => {
+        let portionName = null;
+        let price = item.defaultPrice;
 
-      if (item.hasPortions) {
-        const pIdx = parseInt(elements.lightboxPortionsSelect.value, 10);
-        const p = item.portions[pIdx];
-        portionName = p.name;
-        price = p.price;
-      }
+        if (item.hasPortions && item.portions && item.portions.length > 0) {
+          const pIdx = parseInt(elements.lightboxPortionsSelect.value, 10) || 0;
+          const p = item.portions[pIdx];
+          portionName = p.name;
+          price = p.price;
+        }
 
-      addToCart({
-        itemId: item.id,
-        name: item.name,
-        portionName: portionName,
-        customOption: null,
-        price: price,
-        image: flyerSrc
-      });
+        addToCart({
+          itemId: item.id,
+          name: item.name,
+          portionName: portionName,
+          customOption: null,
+          price: price,
+          image: flyerSrc
+        });
 
-      closeLightbox();
-      openCartDrawer();
-    };
+        closeLightbox();
+        openCartDrawer();
+      };
+    }
 
     // Botón Pedir directo por WhatsApp desde Modal
-    elements.lightboxDirectWaBtn.onclick = () => {
-      let portionText = "";
-      let price = item.defaultPrice;
-      if (item.hasPortions) {
-        const pIdx = parseInt(elements.lightboxPortionsSelect.value, 10);
-        const p = item.portions[pIdx];
-        portionText = ` (${p.name})`;
-        price = p.price;
-      }
+    if (elements.lightboxDirectWaBtn) {
+      elements.lightboxDirectWaBtn.textContent = "💬 Pedir Directo por WhatsApp";
+      elements.lightboxDirectWaBtn.onclick = () => {
+        let portionText = "";
+        let price = item.defaultPrice;
+        if (item.hasPortions && item.portions && item.portions.length > 0) {
+          const pIdx = parseInt(elements.lightboxPortionsSelect.value, 10) || 0;
+          const p = item.portions[pIdx];
+          portionText = ` (${p.name})`;
+          price = p.price;
+        }
 
-      const msg = `¡Hola Asados Colombianos! Quisiera ordenar a domicilio:\n\n🍗 *${item.name}${portionText}*\n💰 Precio: ${formatCOP(price)}\n\n¿Me indican por favor el tiempo de entrega a mi dirección?`;
-      const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
-      window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
-    };
+        const msg = `¡Hola Asados Colombianos! Quisiera ordenar a domicilio:\n\n🍗 *${item.name}${portionText}*\n💰 Precio: ${formatCOP(price)}\n\n¿Me indican por favor el tiempo de entrega a mi dirección?`;
+        const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
+        window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+      };
+    }
 
-    elements.lightboxModal.classList.add("open");
-    document.body.style.overflow = "hidden";
+    if (elements.lightboxModal) {
+      elements.lightboxModal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
   }
 
-  // Lightbox genérico para imágenes informativas (Domicilios, Banner)
-  function openGenericLightbox(src, title) {
-    elements.lightboxImage.src = src;
-    elements.lightboxImage.alt = title;
-    elements.lightboxTitle.textContent = title;
-    elements.lightboxCategory.textContent = "Información del Restaurante";
-    elements.lightboxBadge.textContent = "Oficial";
-    elements.lightboxDesc.textContent = "Consulta aquí los detalles de contacto, líneas directas de domicilio y promociones.";
-    elements.lightboxAccompaniments.style.display = "none";
-    elements.lightboxPortionsContainer.style.display = "none";
-    elements.lightboxPrice.textContent = "";
+  // Lightbox genérico para imágenes informativas (Volante Oficial, Fachada, Domicilios, Banner)
+  function openGenericLightbox(src, title, desc) {
+    if (!elements.lightboxModal) return;
 
-    elements.lightboxAddToCartBtn.style.display = "none";
-    elements.lightboxDirectWaBtn.textContent = "💬 Contactar por WhatsApp";
-    elements.lightboxDirectWaBtn.onclick = () => {
-      const msg = "¡Hola Asados Colombianos! Vi su volante de domicilios y quisiera hacer un pedido.";
-      const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
-      window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
-    };
+    if (elements.lightboxImage) {
+      elements.lightboxImage.src = src;
+      elements.lightboxImage.alt = title;
+    }
+    if (elements.lightboxFullImageBtn) {
+      elements.lightboxFullImageBtn.href = src;
+    }
+    if (elements.lightboxTitle) elements.lightboxTitle.textContent = title;
+    if (elements.lightboxCategory) elements.lightboxCategory.textContent = "Información Oficial";
+    if (elements.lightboxBadge) elements.lightboxBadge.textContent = "Oficial";
+    if (elements.lightboxDesc) elements.lightboxDesc.textContent = desc || "Consulta aquí los detalles de contacto, líneas directas de domicilio y promociones.";
+    if (elements.lightboxAccompaniments) elements.lightboxAccompaniments.style.display = "none";
+    if (elements.lightboxPortionsContainer) elements.lightboxPortionsContainer.style.display = "none";
+    if (elements.lightboxPrice) elements.lightboxPrice.textContent = "";
+
+    if (elements.lightboxAddToCartBtn) elements.lightboxAddToCartBtn.style.display = "none";
+    if (elements.lightboxDirectWaBtn) {
+      elements.lightboxDirectWaBtn.textContent = "💬 Contactar por WhatsApp";
+      elements.lightboxDirectWaBtn.onclick = () => {
+        const msg = `¡Hola Asados Colombianos! Vi su foto/volante de: ${title} y quisiera hacer un pedido o consulta.`;
+        const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
+        window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+      };
+    }
 
     elements.lightboxModal.classList.add("open");
     document.body.style.overflow = "hidden";
@@ -1140,6 +1165,31 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           copyWithExecCommand();
         }
+      });
+    }
+
+    // Abrir foto de la Fachada en Modal Lightbox
+    const facadeCard = document.getElementById("facadePreviewCard");
+    if (facadeCard) {
+      facadeCard.addEventListener("click", () => {
+        openGenericLightbox(
+          "assets/images/fachada-asadero.png",
+          "Local Físico Asados Colombianos",
+          "Cra. 5 #134, Barrio El Salado, Ibagué, Tolima. Vista frontal del restaurante frente a la vía principal."
+        );
+      });
+    }
+
+    // Abrir foto del banner del Asadero
+    const aboutBanner = document.querySelector(".about-banner-frame");
+    if (aboutBanner) {
+      aboutBanner.style.cursor = "pointer";
+      aboutBanner.addEventListener("click", () => {
+        openGenericLightbox(
+          "assets/images/banner-asadero.jpg",
+          "Asadero & Restaurante Asados Colombianos",
+          "El auténtico sabor colombiano al carbón: Pollo asado, broaster, churrasco y costillas BBQ."
+        );
       });
     }
 
