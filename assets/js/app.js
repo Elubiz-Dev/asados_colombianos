@@ -101,6 +101,13 @@ document.addEventListener("DOMContentLoaded", () => {
         state.activeCategory = btn.dataset.catId;
         elements.categoryTabs.querySelectorAll(".category-chip").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
+        if (state.viewMode !== "cards") {
+          state.viewMode = "cards";
+          elements.viewModeBtns.forEach(b => b.classList.toggle("active", b.dataset.viewMode === "cards"));
+          elements.menuGrid.style.display = "grid";
+          elements.cartaView.style.display = "none";
+          elements.galeriaView.style.display = "none";
+        }
         renderMenu();
       });
     });
@@ -383,14 +390,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCartaTable() {
     if (!elements.cartaView) return;
     const categoriesToGroup = [
-      { id: "pollo", title: "🍗 Especialidades de Pollo al Carbón & Broaster" },
-      { id: "carnes", title: "🥩 Cortes de Carne al Carbón & Costillas BBQ" },
-      { id: "alitas", title: "✨ Alitas Doradas & Snacks" },
-      { id: "ejecutivos", title: "🍱 Almuerzo Ejecutivo Completo" },
-      { id: "sopas", title: "🍲 Sopas & Tradición Colombiana" },
-      { id: "platos", title: "🍛 Platos Típicos & Arroces" },
-      { id: "adicionales", title: "🍟 Acompañamientos & Porciones" },
-      { id: "bebidas", title: "🥤 Bebidas & Refrescos" }
+      { id: "pollo", title: "🍗 Pollos: Asado & Broaster" },
+      { id: "carta", title: "🥩 Platos a la Carta" },
+      { id: "bandejas", title: "🍱 Bandeja Asados Colombianos" },
+      { id: "sopas", title: "🍲 Sopas & Caldos Tradicionales" },
+      { id: "adicionales", title: "🍟 Adicionales & Porciones" },
+      { id: "bebidas", title: "🥤 Bebidas & Cervezas" }
     ];
 
     elements.cartaView.innerHTML = `
@@ -481,22 +486,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // Lista de volantes originales completos
     const flyers = [
       {
+        id: "menu-oficial-completo",
+        title: "Carta Oficial de Precios y Domicilios",
+        desc: "Volante oficial completo con toda la lista de precios: Pollos, Platos a la Carta, Bandejas, Caldos, Sopas, Bebidas y Adicionales.",
+        src: "assets/images/menu-oficial-completo.jpg",
+        tag: "Carta Oficial Completa"
+      },
+      {
         id: "pollo-asado",
         title: "Pollo Asado Tradicional",
-        desc: "Pollo Asado + Maduro + Papas Saladas + Arepa + Ají",
+        desc: "Pollo Asado al carbón con papa salada, arepa y ají casero",
         src: "assets/images/pollo-asado.jpg",
         tag: "Especialidad al Carbón"
       },
       {
         id: "pollo-broaster",
-        title: "Pollo Broaster",
-        desc: "Pollo Broaster + Yuca + Papas Francesas + Arepa + Salsas",
+        title: "Pollo Broaster Crujiente",
+        desc: "Pollo Broaster con papa francesa, ají, arepa y miel",
         src: "assets/images/pollo-broaster.jpg",
         tag: "Crocante & Dorado"
       },
       {
         id: "churrasco",
-        title: "Churrasco",
+        title: "Churrasco al Carbón",
         desc: "100% Carne de res + Papas a la francesa + Yuquitas + Salsas",
         src: "assets/images/churrasco.jpg",
         tag: "Corte 100% Res"
@@ -504,27 +516,27 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         id: "costillas-bbq",
         title: "Costillas BBQ",
-        desc: "Costillas bañadas en BBQ + Papas a la francesa + Yuca",
+        desc: "Costillas bañadas en salsa BBQ + Papas a la francesa + Yuquitas",
         src: "assets/images/costillas-bbq.jpg",
         tag: "Glaseado BBQ"
       },
       {
-        id: "alitas-bbq",
-        title: "Alitas BBQ",
-        desc: "Alitas doradas BBQ + Papas a la francesa + Yuca",
+        id: "alitas",
+        title: "Porción de Alitas",
+        desc: "Alitas doradas crujientes con acompañamiento de papas o yuquitas",
         src: "assets/images/alitas-bbq.jpg",
         tag: "Alitas Crocantes"
       },
       {
         id: "pechuga-plancha",
-        title: "Pechuga a la Plancha",
-        desc: "Pechuga a la Plancha + Francesa + Yuquitas + Salsas",
+        title: "Pechuga Plancha o Apanada",
+        desc: "Pechuga a la Plancha o Apanada + Francesa + Yuquitas + Salsas",
         src: "assets/images/pechuga-plancha.jpg",
-        tag: "A la Plancha"
+        tag: "A la Plancha / Apanada"
       },
       {
         id: "arroz-con-pollo",
-        title: "Arroz con Pollo",
+        title: "Arroz con Pollo Tradicional",
         desc: "El mejor arroz con pollo de la ciudad + Francesa + Yuquitas + Salsas",
         src: "assets/images/arroz-con-pollo.jpg",
         tag: "Plato Típico"
@@ -532,21 +544,21 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         id: "caldo-costilla",
         title: "Caldo de Costilla",
-        desc: "Caldo de Costilla con Arepa o Arroz",
+        desc: "Caldo de Costilla con Arepa Caliente o Arroz",
         src: "assets/images/caldo-costilla.jpg",
-        tag: "Sopa Tradicional"
+        tag: "Sopa & Caldo"
       },
       {
-        id: "ejecutivo-combo",
-        title: "Ejecutivo + 1/4 Pollo",
-        desc: "Sopa del día, fríjol, arroz, 1/4 de pollo, ensalada, papitas y limonada",
+        id: "bandeja-pollo",
+        title: "Bandeja Asados + 1/4 Pollo",
+        desc: "Fríjol, arroz, ensalada, papa francesa y 1/4 pollo (asado o broaster)",
         src: "assets/images/ejecutivo-combo.jpg",
-        tag: "Almuerzo Completo"
+        tag: "Bandeja Asados"
       },
       {
         id: "domicilios",
         title: "Volante de Domicilios",
-        desc: "Líneas de WhatsApp: 310-631-2148 / 316-233-4974 / 318-288-5605 / 311-244-7905",
+        desc: "Líneas de WhatsApp: 310-631-2148 / 318-288-5605 / 316-233-4974 / 311-244-7905",
         src: "assets/images/domicilios.jpg",
         tag: "Líneas de Pedido"
       },
