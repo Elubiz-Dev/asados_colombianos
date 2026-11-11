@@ -2,10 +2,21 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Asados Colombianos | Asadero & Restaurante - El Auténtico Sabor al Carbón</title>
-  <meta name="description" content="Bienvenido a Asados Colombianos - Asadero & Restaurante. Especialistas en Pollo Asado al carbón, Pollo Broaster crujiente, Churrasco 100% de res, Costillas BBQ, Alitas y el mejor Arroz con Pollo. ¡Pide tu domicilio ya!">
+  <meta name="description" content="Bienvenido a Asados Colombianos - Asadero & Restaurante en Ibagué. Especialistas en Pollo Asado al carbón, Pollo Broaster crujiente, Churrasco, Costillas BBQ y Alitas. ¡Por la compra de un pollo reclama un cuarto GRATIS! Pide tu domicilio al 310-631-2148.">
+  <meta name="keywords" content="asados colombianos, asadero ibague, restaurante ibague, pollo asado ibague, pollo broaster, churrasco, domicilios ibague, comida colombiana">
+  <meta name="theme-color" content="#0f0a07">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   
+  <!-- OpenGraph / Redes Sociales y WhatsApp -->
+  <meta property="og:title" content="Asados Colombianos | Asadero & Restaurante">
+  <meta property="og:description" content="🔥 Un sabor que te hace volver. Pollo asado al carbón, broaster, churrasco y costillas BBQ en Ibagué. ¡Por la compra de un pollo reclama 1/4 GRATIS!">
+  <meta property="og:image" content="assets/images/logo-eslogan.jpg">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:locale" content="es_CO">
+
   <!-- Favicon oficial extraído del logo -->
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <link rel="apple-touch-icon" href="assets/images/favicon.png">
@@ -581,24 +592,43 @@
             </div>
 
             <div class="loc-actions-row">
-              <a href="https://maps.app.goo.gl/weU8bPZRaHW5u1pe8" 
+              <a href="https://www.google.com/maps/search/?api=1&query=4.445838,-75.152604" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="btn-loc-maps">
+                 class="btn-loc-maps"
+                 title="Abrir ubicación en Google Maps">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
                 <span>Abrir en Google Maps</span>
               </a>
-              <a href="https://wa.me/573106312148?text=Hola%20Asados%20Colombianos,%20quisiera%20saber%20c%C3%B3mo%20llegar%20al%20restaurante." 
+              <a href="https://www.google.com/maps/dir/?api=1&destination=4.445838,-75.152604" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 class="btn-loc-wa">
+                 class="btn-loc-directions"
+                 title="Trazar ruta GPS para llegar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                </svg>
+                <span>Cómo Llegar (Ruta GPS)</span>
+              </a>
+              <button type="button" class="btn-loc-copy" id="copyAddressBtn" title="Copiar dirección al portapapeles">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copyAddressText">Copiar Dirección</span>
+              </button>
+              <a href="https://wa.me/573106312148?text=Hola%20Asados%20Colombianos,%20quisiera%20saber%20c%C3%B3mo%20llegar%20al%20restaurante%20o%20pedir%20a%20domicilio." 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="btn-loc-wa"
+                 title="Contactar al restaurante por WhatsApp">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
                 </svg>
-                <span>¿Cómo Llego?</span>
+                <span>Escribir por WhatsApp</span>
               </a>
             </div>
           </div>

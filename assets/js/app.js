@@ -190,14 +190,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       return `
         <article class="dish-card" data-item-id="${item.id}">
-          <div class="dish-card-media ${!hasImage ? 'no-image-fallback' : ''}">
+          <div class="dish-card-media ${!hasImage ? 'no-image-fallback' : ''}" 
+               data-flyer-id="${item.id}" 
+               role="button" 
+               tabindex="0" 
+               title="Toca para ver la foto y volante completo">
             ${hasImage ? `
               <img 
                 src="${item.cardImage}" 
                 alt="${item.name}" 
                 loading="lazy"
+                decoding="async"
                 class="dish-card-img"
               />
+              <span class="mobile-tap-zoom">🔍 Toca para ampliar</span>
               <div class="dish-card-overlay">
                 ${isPromoWithFlyer ? `
                   <button type="button" class="btn-view-flyer" data-flyer-id="${item.id}" title="Ver foto y volante original completo">
@@ -686,7 +692,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const msg = `¡Hola Asados Colombianos! Quisiera ordenar a domicilio:\n\n🍗 *${item.name}${portionText}*\n💰 Precio: ${formatCOP(price)}\n\n¿Me indican por favor el tiempo de entrega a mi dirección?`;
-      window.open(`https://wa.me/57${state.selectedPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+      const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
+      window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
     };
 
     elements.lightboxModal.classList.add("open");
@@ -709,7 +716,8 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.lightboxDirectWaBtn.textContent = "💬 Contactar por WhatsApp";
     elements.lightboxDirectWaBtn.onclick = () => {
       const msg = "¡Hola Asados Colombianos! Vi su volante de domicilios y quisiera hacer un pedido.";
-      window.open(`https://wa.me/57${state.selectedPhone}?text=${encodeURIComponent(msg)}`, "_blank");
+      const cleanPhone = String(state.selectedPhone || RESTAURANT_INFO.phones[0].number).replace(/\D/g, "");
+      window.open(`https://wa.me/57${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
     };
 
     elements.lightboxModal.classList.add("open");
@@ -873,6 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const address = elements.clientAddressInput ? elements.clientAddressInput.value.trim() : "";
     const notes = elements.clientNotesInput ? elements.clientNotesInput.value.trim() : "";
     const phone = state.selectedPhone || RESTAURANT_INFO.phones[0].number;
+    const cleanPhone = String(phone).replace(/\D/g, "");
 
     let message = `¡Hola *Asados Colombianos*! 🔥🍗\n`;
     message += `Deseo realizar el siguiente pedido a domicilio:\n\n`;
@@ -897,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
     message += `¿Me confirman la recepción del pedido y el tiempo aproximado de llegada? ¡Muchas gracias!`;
 
     const encoded = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/57${phone}?text=${encoded}`;
+    const whatsappUrl = `https://wa.me/57${cleanPhone}?text=${encoded}`;
 
     window.open(whatsappUrl, "_blank");
   }
@@ -954,7 +963,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (elements.videoPlayToggle) {
       elements.videoPlayToggle.addEventListener("click", () => {
         if (elements.heroVideo.paused) {
-          elements.heroVideo.play();
+          const playPromise = elements.heroVideo.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
           elements.videoPlayToggle.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <rect x="6" y="4" width="4" height="16"></rect>
@@ -1008,6 +1020,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (elements.clearSearchBtn) {
           elements.clearSearchBtn.style.display = state.searchTerm ? "block" : "none";
         }
+        if (state.searchTerm && state.viewMode !== "cards") {
+          state.viewMode = "cards";
+          elements.viewModeBtns.forEach(b => b.classList.toggle("active", b.dataset.viewMode === "cards"));
+          elements.menuGrid.style.display = "grid";
+          elements.cartaView.style.display = "none";
+          elements.galeriaView.style.display = "none";
+        }
         renderMenu();
       });
     }
@@ -1050,7 +1069,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileMenuToggle = document.getElementById("mobileMenuToggle");
     const navLinks = document.getElementById("navLinks");
     if (mobileMenuToggle && navLinks) {
-      mobileMenuToggle.addEventListener("click", () => {
+      mobileMenuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
         navLinks.classList.toggle("open");
       });
 
@@ -1058,6 +1078,56 @@ document.addEventListener("DOMContentLoaded", () => {
         link.addEventListener("click", () => {
           navLinks.classList.remove("open");
         });
+      });
+
+      // Cerrar menú al hacer clic afuera
+      document.addEventListener("click", (e) => {
+        if (navLinks.classList.contains("open")) {
+          if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            navLinks.classList.remove("open");
+          }
+        }
+      });
+    }
+
+    // Botón Copiar Dirección con soporte robusto HTTP/LAN y HTTPS
+    const copyBtn = document.getElementById("copyAddressBtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        const addrText = "Cra. 5 #134, Barrio El Salado, Ibagué, Tolima";
+        const updateBtnFeedback = () => {
+          const txt = document.getElementById("copyAddressText");
+          if (txt) {
+            txt.textContent = "¡Dirección Copiada!";
+            setTimeout(() => { txt.textContent = "Copiar Dirección"; }, 2200);
+          }
+        };
+
+        const copyWithExecCommand = () => {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = addrText;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand("copy");
+            document.body.removeChild(ta);
+            if (ok) {
+              updateBtnFeedback();
+            } else {
+              prompt("Copia la dirección del asadero:", addrText);
+            }
+          } catch (e) {
+            prompt("Copia la dirección del asadero:", addrText);
+          }
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(addrText).then(updateBtnFeedback).catch(copyWithExecCommand);
+        } else {
+          copyWithExecCommand();
+        }
       });
     }
 

@@ -848,6 +848,30 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-tap-zoom {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 10, 7, 0.85);
+  color: var(--gold-light);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  backdrop-filter: blur(4px);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dish-card:hover .mobile-tap-zoom {
+  opacity: 0;
+  transform: translateY(4px);
 }
 
 .dish-card-img {
@@ -1326,7 +1350,7 @@ button {
 
 .galeria-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 2rem;
 }
 
@@ -2278,6 +2302,54 @@ button {
   box-shadow: 0 6px 18px rgba(66, 133, 244, 0.45);
 }
 
+.btn-loc-directions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+  text-align: center;
+  transition: all 0.25s ease;
+}
+.btn-loc-directions:hover {
+  background: linear-gradient(135deg, #047857, #065f46);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+}
+
+.btn-loc-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gold-light);
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 0.8rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-gold);
+  text-align: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-loc-copy:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: var(--gold-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+.btn-loc-copy:active {
+  transform: scale(0.97);
+}
+
 .btn-loc-wa {
   display: inline-flex;
   align-items: center;
@@ -2478,8 +2550,9 @@ button {
     display: inline;
   }
 
-  /* Tarjetas del menú en móvil */
-  .menu-cards-grid {
+  /* Tarjetas del menú y Galería en móvil */
+  .menu-cards-grid,
+  .galeria-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
@@ -2651,7 +2724,7 @@ button {
   .loc-actions-row {
     gap: 0.6rem;
   }
-  .btn-loc-maps, .btn-loc-wa {
+  .btn-loc-maps, .btn-loc-directions, .btn-loc-copy, .btn-loc-wa {
     padding: 0.75rem 1rem;
     font-size: 0.88rem;
   }
@@ -2698,7 +2771,7 @@ button {
   .loc-detail-sub {
     font-size: 0.72rem;
   }
-  .btn-loc-maps, .btn-loc-wa {
+  .btn-loc-maps, .btn-loc-directions, .btn-loc-copy, .btn-loc-wa {
     padding: 0.7rem 0.9rem;
     font-size: 0.82rem;
   }
